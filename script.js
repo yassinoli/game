@@ -18,7 +18,8 @@ function starting() {
 starting()
 var j = 0
 let mv = true
-let a = 1
+let a = 3
+let ids = 0
 let btns = document.querySelector('.starButton')
 let f = document.querySelector('.starting')
 
@@ -35,13 +36,13 @@ btns.addEventListener('click', () => {
     setTimeout(() => {
         load.classList.add('playdiv')
         heros()
-        enemys()
+        for(let j = 0 ; j<5 ; j++){enemys(`num${j}`)}
         scor()
         bullets()
         level()
         let hero = document.querySelector('.hero')
         //let x = 0
-        let y = 550
+        let y = 570
         const step = 10
         document.body.addEventListener('keydown', (elm) => {
             switch (elm.key) {
@@ -58,7 +59,7 @@ btns.addEventListener('click', () => {
              const enemy = document.querySelector('.enmySize')
              if (mv) j+=a
              else j-=a
-             if (j==1000) mv = false
+             if (j>=1000) mv = false
              if (j<=1) mv =true
              enemy.style.left = j + 'px'
     requestAnimationFrame(movenemy)
@@ -79,7 +80,7 @@ function heros() {
     hero.classList.add('hero')
     let plan = document.createElement('img')
     plan.setAttribute('class', 'plan')
-    plan.setAttribute('src', 'airfight.png')
+    plan.setAttribute('src', 'her.png')
     hero.appendChild(plan)
     let parent = document.querySelector('.startdiv')
     parent.appendChild(hero)
@@ -107,11 +108,12 @@ function level() {
     document.body.appendChild(leveldiv)
 }
 
-function enemys() {
+function enemys(id) {
     //   let enm = document.createElement('div')
     //   enm.classList.add('enemy') 
     let enmy = document.createElement('img')
     enmy.setAttribute('src', 'enemy1.png')
+    enmy.setAttribute('id',`${id}`)
     enmy.classList.add('enmySize')
     // enm.appendChild(enmy)
     let parnt = document.querySelector('.startdiv')
