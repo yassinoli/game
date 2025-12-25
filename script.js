@@ -45,9 +45,10 @@ btns.addEventListener('click', () => {
         let y = 570
         const step = 10
         document.body.addEventListener('keydown', (elm) => {
+            //console.log(elm.key)
             switch (elm.key) {
                 // case 'ArrowUp' : x -= step; break
-                case 'Backspace': bullet(); break
+                case ' ' :  bullet(); break
                 case 'ArrowLeft': y -= step; break
                 case 'ArrowRight': y += step; break
             }
