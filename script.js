@@ -27,6 +27,7 @@ let gameOver = false
 let enemycount = 0
 let lvl = 1
 let scorr = 0
+let angle = 0
  let speed = 1.3
  const enemy1 = 'enemy1.png'
  const enemy2 = 'enemy2.png'
@@ -48,6 +49,7 @@ function startGame() {
   createHero()
   createnemy()
   bonus()
+  rock()
   setInterval(createnemy, 400)
 
 }
@@ -232,7 +234,7 @@ function hit(a, b) {
 function heroDies() {
   gameOver = true
   hero.style.opacity = '0.4'
-    sounds.lose.play()
+   sounds.lose.play()
   alert('GAME OVER')
   window.location.reload()
 }
@@ -259,7 +261,7 @@ function level() {
     leveldiv.innerText = 'LEVEL: 1'
     document.body.appendChild(leveldiv)
 }
-
+//--------------- bons bullet
 function bonus(){
  setInterval(() => {
    let bons = document.createElement('div')
@@ -296,7 +298,51 @@ function bonsmove(){
 }
 
 
+//--------------- rocks
+function rock(){
+ setInterval(() => {
+   let rok = document.createElement('div')
+  rok.className = 'rok'
+  game.appendChild(rok)
+  rokmove()
+}, 12000);
+}
 
+function rokmove(){
+  let wg = game.getBoundingClientRect()
+  let rok = document.querySelector('.rok')
+   rok.style.left = Math.random()*wg.width + 'px'
+  rok.style.top = 5 + 'px'
+  
+
+ function mvbns(){ 
+  if (hit(rok,hero)){
+    rok.remove()
+    hero.remove()
+    heroDies()
+  }
+
+  if (!hit(rok , game)){
+    rok.remove()
+  }
+  angle+=10
+   rok.style.transform = `rotate(${angle}deg)`;
+   rok.style.top = rok.offsetTop + 1 + 'px'
+   requestAnimationFrame(mvbns)
+  }
+     requestAnimationFrame(mvbns)
+}
+
+
+
+
+
+
+
+
+
+
+// ----------------- stage tali 
 
 function lastStage(){
  if(enemies.length == 0) {
@@ -378,6 +424,3 @@ function lastbullet(b) {
 
 
 
-setInterval(() => {
-  console.log(enemyBullets.length);
-}, 3000);

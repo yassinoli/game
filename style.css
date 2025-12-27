@@ -141,3 +141,12 @@ body::before {
     color: whitesmoke;
     position: absolute;
   }
+
+
+  .rok{
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: url('rock.png') center / cover no-repeat;
+    z-index: 99;
+  }
