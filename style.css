@@ -22,80 +22,78 @@ body::before {
   z-index: -1;
 }
 
-.startdiv{
-    position: fixed;
-    width: 80vw;
-    height: 80vh;
-    background-color: rgba(0, 0, 0, 0);
-    margin: 10vh 10vw;
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-   
+
+/* container */
+.startdiv {
+  position: relative;
+  width: 60vw;
+  height: 80vh;
+  margin: 10vh auto;
+  background: rgba(0, 0, 0, 0.995);
+  border-radius: 20px;
+  overflow: hidden;
 }
 
-.starting{
-    height: 25vh;
-    width: 30vw;
-    background-color: rgb(0, 0, 0);
-    border-radius: 15px;
-     display: flex;
-     flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    
+/* start menu */
+.starting {
+  position: absolute;
+  inset: 0;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  z-index: 5;
 }
 
-.playdiv{
-   position: fixed;
-    width: 60vw;
-    height: 80vh;
-    background-color: rgba(0, 0, 0, 0.918);
-    margin: 10vh 20vw;
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* buttons */
+.starButton,
+.instructionbtn {
+  height: 6vh;
+  width: 9vw;
+  border-radius: 10px;
+  border: none;
+  background: grey;
+  color: white;
+  cursor: pointer;
 }
 
-.loadstarting{
-   background-image: url('war.jpg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 80% 100%;
+/* hero */
+.plan {
+  position: absolute;
+  width: 3.5vw;
+  transform: rotate(180deg);
+  left: 50%;
+  bottom: 5%;
+  translate: -50% 0;
+  z-index: 2;
 }
 
-.starButton{
-    height: 6vh;
-    width: 7vw;
-    border-radius: 10px;
-    border: none;
-    background-color: grey;
-    color: aliceblue;
-    cursor: pointer;
-
+/* enemy */
+.enmySize {
+  position: absolute;
+  width: 6vw;
+  height: auto;
+  top: 5%;
 }
 
-.instructionbtn{
- height: 6vh;
-    width: 7vw;
-    border-radius: 10px;
-     border: none;
-    background-color: grey;
-    color: aliceblue;
-    cursor: pointer;
+/* bullets */
+.bullet {
+  position: absolute;
+  width: 8px;
+  height: 12px;
+  background: white;
+  border-radius: 4px;
+  z-index: 3;
 }
 
-.hero{
-  height: 15px;
-  width: 15px;
-  background-image: url('airfight.png');
-  background-color: transparent;
-  position:absolute;
-  z-index: 1;
-  top :85%;
-  }
+.enemyBullet {
+  background: red;
+  height: 13px;
+  width: 4px;
+}
+
+
 
   .score{
     position: fixed;
@@ -110,7 +108,7 @@ body::before {
     padding: 10px;
   }
 
-   .tim{
+   .countBoullet{
     position: fixed;
     left: 8vw;
     top: 24vh;
@@ -136,24 +134,9 @@ body::before {
     padding: 10px;
   }
 
-  .plan{
-    width: 3.5vw;
-    height: auto;
-    transform: rotate(180deg);
-  }
-  .enmySize{
-    position: absolute;
-    top: 0;
-      width: 6vw;
-    height: 6vh;
-  }
-
-
-  .bullet{
-    height: 10px;
+  .bonus{
     width: 10px;
-    border-radius: 50%;
-    background-color: brown;
-    position: absolute;
-    z-index: 2;
+    height: auto;
+    background: transparent;
+    color: whitesmoke;
   }

@@ -1,92 +1,226 @@
+const game = document.createElement('div')
+game.className = 'startdiv'
+document.body.appendChild(game)
 
-function starting() {
-    let div = document.createElement('div')
-    div.setAttribute('class', 'startdiv')
-    document.body.appendChild(div)
-    let strt = document.createElement('div')
-    strt.setAttribute('class', 'starting')
-    let buttonStart = document.createElement('button')
-    buttonStart.setAttribute('class', 'starButton')
-    buttonStart.innerText = 'Start play'
-    let buttonInstruction = document.createElement('button')
-    buttonInstruction.setAttribute('class', 'instructionbtn')
-    buttonInstruction.innerText = 'See Instructions'
-    strt.appendChild(buttonStart); strt.appendChild(buttonInstruction)
-    document.querySelector('.startdiv').appendChild(strt)
+const sounds = {
+  star: new Audio("start.wav"),
+  win: new Audio("kil.wav"),
+  lose: new Audio("die.wav")
+};
+
+const startMenu = document.createElement('div')
+startMenu.className = 'starting'
+startMenu.innerHTML = `<button class="starButton">Start</button>`
+game.appendChild(startMenu)
+
+document.querySelector('.starButton').onclick = startGame
+scor()
+bullets()
+level()
+let bulcount = 6
+let hero
+let enemies = []
+let enemytotal = 0
+let heroBullets = []
+let enemyBullets = []
+let gameOver = false
+let enemycount = 0
+let lvl = 1
+let scorr = 0
+ let speed = 1.3
+
+//--------------
+let bulcounter = document.querySelector('.countBoullet')
+ bulcounter.innerText =  `Bullets ${bulcount}`
+
+ let levels = document.querySelector('.level')
+ levels.innerText = `LEVEl ${lvl}`
+
+ let scores = document.querySelector('.score')
+scores.innerText = `SCORE : ${scorr}`
+// start game
+function startGame() {
+  sounds.star.play()
+  startMenu.remove()
+  createHero()
+  createnemy()
+  setInterval(createnemy, 4000)
 }
 
-starting()
-var j = 0
-let mv = true
-let a = 3
-let ids = 0
-let btns = document.querySelector('.starButton')
-let f = document.querySelector('.starting')
-
-
-
-btns.addEventListener('click', () => {
-    f.style.display = 'none'
-    let load = document.querySelector('.startdiv')
-    load.classList.add('loadstarting')
-    setTimeout(() => {
-        load.classList.remove('loadstarting')
-    }, 1000);
-
-    setTimeout(() => {
-        load.classList.add('playdiv')
-        heros()
-        for(let j = 0 ; j<5 ; j++){enemys(`num${j}`)}
-        scor()
-        bullets()
-        level()
-        let hero = document.querySelector('.hero')
-        //let x = 0
-        let y = 570
-        const step = 10
-        document.body.addEventListener('keydown', (elm) => {
-            //console.log(elm.key)
-            switch (elm.key) {
-                // case 'ArrowUp' : x -= step; break
-                case ' ' :  bullet(); break
-                case 'ArrowLeft': y -= step; break
-                case 'ArrowRight': y += step; break
-            }
-            // hero.style.top = x + 'px'
-            hero.style.left = y + 'px'
-
-        })
-            function movenemy(){
-             const enemy = document.querySelector('.enmySize')
-             if (mv) j+=a
-             else j-=a
-             if (j>=1000) mv = false
-             if (j<=1) mv =true
-             enemy.style.left = j + 'px'
-    requestAnimationFrame(movenemy)
+function createHero() {
+  hero = document.createElement('img')
+  hero.src = 'her.png'
+  hero.className = 'plan'
+  game.appendChild(hero)
 }
-            requestAnimationFrame(movenemy)
 
+document.addEventListener('keydown', e => {
+  if (gameOver || !hero) return
 
-    }, 1100);
+  let x = hero.offsetLeft
 
-    
-
-
+  if (e.key === 'ArrowLeft') hero.style.left = x - 12 + 'px'
+  if (e.key === 'ArrowRight') hero.style.left = x + 12 + 'px'
+  if (e.key === ' ') heroshut()
 })
 
+function createnemy() {
+  if (gameOver) return
+   if (enemytotal>4*lvl) lvl++ , bulcount = parseInt((20*lvl)/1.5) , 
+   levels.innerText = `LEVEL ${lvl}`
+  if (enemycount == 3*lvl || enemytotal==5*lvl) return 
+  const e = document.createElement('img')
+  e.src = 'enemy1.png'
+  e.className = 'enmySize'
+  e.style.left = Math.random() * (game.clientWidth - 80) + 'px'
+  enemycount++
+  enemytotal++
+  game.appendChild(e)
+  enemies.push(e)
 
-function heros() {
-    let hero = document.createElement('div')
-    hero.classList.add('hero')
-    let plan = document.createElement('img')
-    plan.setAttribute('class', 'plan')
-    plan.setAttribute('src', 'her.png')
-    hero.appendChild(plan)
-    let parent = document.querySelector('.startdiv')
-    parent.appendChild(hero)
-    // requestAnimationFrame()
+  movenemy(e)
+  enemyshut(e)
 }
+
+// enemy move
+function movenemy(enemy) {
+  
+let dir = 1
+  function step() {
+    if (!enemy.parentElement || gameOver) return
+
+    let x = enemy.offsetLeft + dir * speed
+    enemy.style.left = x + 'px'
+
+    if (x <= 0 || x >= game.clientWidth - enemy.offsetWidth) {
+      dir *= -1
+      enemy.style.top = enemy.offsetTop + 30 + 'px'
+    }
+    requestAnimationFrame(step)
+  }
+  requestAnimationFrame(step)
+}
+
+// -hero bul
+function heroshut() {
+   bulcount--
+   
+  if (bulcount<0) return;
+  bulcounter.innerText =  `Bullets ${bulcount}`
+  levels.innerText = `LEVEL ${lvl}`
+  const b = document.createElement('div')
+  b.className = 'bullet'
+ 
+  b.style.left = hero.offsetLeft + hero.offsetWidth / 2 - 20 + 'px'
+  b.style.top = hero.offsetTop - 10 + 'px'
+
+  game.appendChild(b)
+  heroBullets.push(b)
+  herobuletmove(b)
+}
+
+function herobuletmove(b) {
+  function step() {
+    if (!b.parentElement || gameOver) return
+
+    b.style.top = b.offsetTop - 6 + 'px'
+
+    // hero bulet -> enmy
+    enemies.forEach((e, i) => {
+      if (hit(b, e)) {
+        b.remove()
+        e.remove()
+        scorr+=5
+        scores.innerText = `SCORE : ${scorr}`
+        sounds.win.play()
+        enemycount--
+        enemies.splice(i, 1)
+      }
+    })
+
+    // hero bul <-> enemy bul
+    enemyBullets.forEach((eb, i) => {
+      if (hit(b, eb)) {
+        b.remove()
+        eb.remove()
+        enemyBullets.splice(i, 1)
+      }
+    })
+
+    requestAnimationFrame(step)
+  }
+  requestAnimationFrame(step)
+}
+
+// enemy bull
+function enemyshut(enemy) {
+  const shoot = setInterval(() => {
+    if (!enemy.parentElement || gameOver) {
+      clearInterval(shoot)
+      return
+    }
+
+    const b = document.createElement('div')
+    b.className = 'bullet enemyBullet'
+
+    b.style.left = enemy.offsetLeft + enemy.offsetWidth / 2 - 4 + 'px'
+    b.style.top = enemy.offsetTop + enemy.offsetHeight + 'px'
+
+    game.appendChild(b)
+    enemyBullets.push(b)
+    enemybuletmove(b)
+  }, 3000)
+}
+
+function enemybuletmove(b) {
+  function step() {
+    if (!b.parentElement || gameOver) return
+
+    b.style.top = b.offsetTop + 4 + 'px'
+
+    // enemybullet -> hero
+    if (hit(b, hero)) {
+      heroDies()
+      b.remove()
+      return
+    }
+
+    // enemybulet <-> hero bulet
+    heroBullets.forEach((hb, i) => {
+      if (hit(b, hb)) {
+        b.remove()
+        hb.remove()
+        heroBullets.splice(i, 1)
+      }
+    })
+
+    requestAnimationFrame(step)
+  }
+  requestAnimationFrame(step)
+}
+
+// intersection
+function hit(a, b) {
+  const ar = a.getBoundingClientRect()
+  const br = b.getBoundingClientRect()
+  return (
+    ar.left < br.right &&
+    ar.right > br.left &&
+    ar.top < br.bottom &&
+    ar.bottom > br.top
+  )
+}
+
+// game finish
+function heroDies() {
+  gameOver = true
+  hero.style.opacity = '0.4'
+    sounds.lose.play()
+  alert('GAME OVER')
+  window.location.reload()
+}
+
+
 
 
 function scor() {
@@ -97,7 +231,7 @@ function scor() {
 }
 function bullets() {
     let timdiv = document.createElement('div')
-    timdiv.setAttribute('class', 'tim')
+    timdiv.setAttribute('class', 'countBoullet')
     timdiv.innerText = `BULLETS`
     document.body.appendChild(timdiv)
 }
@@ -109,39 +243,13 @@ function level() {
     document.body.appendChild(leveldiv)
 }
 
-function enemys(id) {
-    //   let enm = document.createElement('div')
-    //   enm.classList.add('enemy') 
-    let enmy = document.createElement('img')
-    enmy.setAttribute('src', 'enemy1.png')
-    enmy.setAttribute('id',`${id}`)
-    enmy.classList.add('enmySize')
-    // enm.appendChild(enmy)
-    let parnt = document.querySelector('.startdiv')
-    parnt.appendChild(enmy)
+function bonus(){
+  let bons = document.createElement('div')
+  bons.className = 'bonus'
+  bons.innerText = '+5'
+  document.querySelector('.startdiv').appendChild(bons)
 }
 
-function bullet() {
-    let parnt = document.querySelector('.startdiv')
-    let bullet = document.createElement('div')
-    bullet.setAttribute('class', 'bullet')
-    let starter = document.querySelector('.hero')
-    let x = (starter.getBoundingClientRect().x + starter.getBoundingClientRect().right) / 2
-    let y = (starter.getBoundingClientRect().y + starter.getBoundingClientRect().bottom) / 2
-    console.log(x, y);
-    bullet.style.top = x
-    bullet.style.left = y
-    parnt.appendChild(bullet)
-}
-
-
-
-// requestAnimationFrame(() => {
-//     const enemy = document.querySelector('.enmySize')
-//     console.log(enemy);
-
-//     j++
-//     enemy.style.left = j
-// })
-
-
+// setInterval(() => {
+//   bonus()
+// }, 3000);
