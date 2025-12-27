@@ -139,4 +139,5 @@ body::before {
     height: auto;
     background: transparent;
     color: whitesmoke;
+    position: absolute;
   }
