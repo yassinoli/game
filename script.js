@@ -406,6 +406,7 @@ function shutitt(enemy) {
 
     const b = document.createElement('div')
     b.className = 'bullet enemyBullet'
+    b.style.backgroundColor = 'green'
 
     b.style.left = enemy.offsetLeft + enemy.offsetWidth / 2 - 4 + 'px'
     b.style.top = enemy.offsetTop + enemy.offsetHeight + 'px'

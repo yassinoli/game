@@ -81,10 +81,10 @@ body::before {
 /* bullets */
 .bullet {
   position: absolute;
-  width: 8px;
-  height: 12px;
-  background: white;
-  border-radius: 4px;
+  width: 3px;
+  height: 16px;
+  background: rgb(0, 68, 255);
+  border-radius: 2px;
   z-index: 3;
 }
 
