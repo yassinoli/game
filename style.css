@@ -71,6 +71,7 @@ body::before {
 
 /* enemy */
 .enmySize {
+  border-radius: 20px;
   position: absolute;
   width: 6vw;
   height: auto;
@@ -149,4 +150,5 @@ body::before {
     height: 40px;
     background: url('rock.png') center / cover no-repeat;
     z-index: 99;
+    border-radius: 20px;
   }

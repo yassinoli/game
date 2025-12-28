@@ -17,7 +17,7 @@ document.querySelector('.starButton').onclick = startGame
 scor()
 bullets()
 level()
-let bulcount = 100
+let bulcount = 5
 let hero
 let enemies = []
 let enemytotal = 0
@@ -50,7 +50,7 @@ function startGame() {
   createnemy()
   bonus()
   rock()
-  setInterval(createnemy, 400)
+  setInterval(createnemy, 3000)
 
 }
 
@@ -68,14 +68,16 @@ document.addEventListener('keydown', e => {
 
   if (e.key === 'ArrowLeft') hero.style.left = x - 12 + 'px'
   if (e.key === 'ArrowRight') hero.style.left = x + 12 + 'px'
-  if (e.key === ' ') heroshut()
+  if (e.key === ' ') setTimeout(heroshut(),1000);
 })
-
+ 
 function createnemy() {
   let enemyto
   if (enemytotal<=6) enemyto = enemy1
   if (enemytotal>6 && enemytotal<=20) enemyto = enemy2
   if (enemytotal >20) {
+    lvl++
+    levels.innerText = `LEVEL ${lvl}`
     lastStage()
     return
    }
@@ -98,17 +100,22 @@ function createnemy() {
 
 // enemy move
 function movenemy(enemy) {
-  
+  let mod = 0
 let dir = 1
   function step() {
     if (!enemy.parentElement || gameOver) return
 
     let x = enemy.offsetLeft + dir * speed
     enemy.style.left = x + 'px'
-
+   if(mod%7==0) {
+    enemy.style.top = enemy.offsetTop + 1 + 'px'
+  }
+  mod++
     if (x <= 0 || x >= game.clientWidth - enemy.offsetWidth) {
       dir *= -1
-      enemy.style.top = enemy.offsetTop + 30 + 'px'
+    }
+    if(hit(enemy,hero)){
+      heroDies()
     }
     requestAnimationFrame(step)
   }
@@ -223,10 +230,7 @@ function hit(a, b) {
   const ar = a.getBoundingClientRect()
   const br = b.getBoundingClientRect()
   return (
-    ar.left < br.right &&
-    ar.right > br.left &&
-    ar.top < br.bottom &&
-    ar.bottom > br.top
+    ar.left < br.right && ar.right > br.left && ar.top < br.bottom && ar.bottom > br.top
   )
 }
 
@@ -236,7 +240,7 @@ function heroDies() {
   hero.style.opacity = '0.4'
    sounds.lose.play()
   alert('GAME OVER')
-  window.location.reload()
+ window.location.reload()
 }
 
 
@@ -322,10 +326,17 @@ function rokmove(){
     heroDies()
   }
 
+   heroBullets.forEach((hb, i) => {
+      if (hit(rok, hb)) {
+        hb.remove()
+        heroBullets.splice(i, 1)
+      }
+    })
+
   if (!hit(rok , game)){
     rok.remove()
   }
-  angle+=10
+  angle+=1
    rok.style.transform = `rotate(${angle}deg)`;
    rok.style.top = rok.offsetTop + 1 + 'px'
    requestAnimationFrame(mvbns)
