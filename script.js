@@ -65,10 +65,20 @@ document.addEventListener('keydown', e => {
   if (gameOver || !hero) return
 
   let x = hero.offsetLeft
-
-  if (e.key === 'ArrowLeft') hero.style.left = x - 12 + 'px'
-  if (e.key === 'ArrowRight') hero.style.left = x + 12 + 'px'
-  if (e.key === ' ') setTimeout(heroshut(),1000);
+  let gw = game.getBoundingClientRect()
+  let hw = hero.getBoundingClientRect()
+  if (e.key === 'ArrowLeft'  ){
+    if (hw.left>gw.left){
+      hero.style.left = x - 12 + 'px'
+    }
+    }
+  if (e.key === 'ArrowRight'){
+    if (hw.right<gw.right){
+       hero.style.left = x + 12 + 'px' 
+    }
+  } 
+  
+  if (e.key === ' ') heroshut(); 
 })
  
 function createnemy() {
@@ -307,6 +317,7 @@ function rock(){
  setInterval(() => {
    let rok = document.createElement('div')
   rok.className = 'rok'
+  rok.setAttribute('id','box')
   game.appendChild(rok)
   rokmove()
 }, 12000);
@@ -336,8 +347,7 @@ function rokmove(){
   if (!hit(rok , game)){
     rok.remove()
   }
-  angle+=1
-   rok.style.transform = `rotate(${angle}deg)`;
+  
    rok.style.top = rok.offsetTop + 1 + 'px'
    requestAnimationFrame(mvbns)
   }

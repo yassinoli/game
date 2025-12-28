@@ -143,6 +143,11 @@ body::before {
     position: absolute;
   }
 
+  .lasstBullet{
+    height: 16px;
+    width: 4px;
+    background-color: greenyellow;
+  }
 
   .rok{
     position: absolute;
@@ -152,3 +157,60 @@ body::before {
     z-index: 99;
     border-radius: 20px;
   }
+
+  #box {
+  transform-origin: 50% 50%; 
+  transform-box: fill-box;
+  animation: rotate-box 3s linear infinite;
+}
+
+@keyframes rotate-box {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+.startdiv {
+  background: black;
+  overflow: hidden;
+}
+
+.startdiv::before,
+.startdiv::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+  animation: moveStars linear infinite;
+}
+
+.startdiv::before {
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, white 100%, transparent),
+    radial-gradient(1px 1px at 60px 80px, white 100%, transparent),
+    radial-gradient(1px 1px at 120px 50px, white 100%, transparent),
+    radial-gradient(1px 1px at 160px 140px, white 100%, transparent);
+  background-size: 200px 200px; 
+  opacity: 0.6;
+  animation-duration: 120s;
+}
+
+.startdiv::after {
+  background-image:
+    radial-gradient(2px 2px at 50px 50px, white 100%, transparent),
+    radial-gradient(2px 2px at 150px 120px, white 100%, transparent);
+  background-size: 300px 300px;
+  opacity: 0.5;
+  animation-duration: 60s;
+}
+
+@keyframes moveStars {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(200px); 
+  }
+}
