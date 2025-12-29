@@ -100,7 +100,7 @@ body::before {
     position: fixed;
     left: 8vw;
     top: 10vh;
-    height: 10vh;
+    height: 4vh;
     width: 10vw;
     border-radius: 12px;
     background-color: rgba(20, 20, 20, 0.783);
@@ -112,8 +112,8 @@ body::before {
    .countBoullet{
     position: fixed;
     left: 8vw;
-    top: 24vh;
-    height: 10vh;
+    top: 20vh;
+    height: 4vh;
     width: 10vw;
     border-radius: 12px;
     background-color: rgba(20, 20, 20, 0.783);
@@ -125,7 +125,7 @@ body::before {
   .level{
     position: fixed;
     left: 8vw;
-    top: 40vh;
+    top: 30vh;
     height: 4vh;
     width: 10vw;
     border-radius: 12px;
@@ -134,7 +134,19 @@ body::before {
     align-items: center;
     padding: 10px;
   }
-
+  .pause{
+    position: fixed;
+    left: 8vw;
+    top: 40vh;
+    height: 4vh;
+    width: 10vw;
+    border-radius: 12px;
+    background-color: rgba(20, 20, 20, 0.783);
+    color: azure;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+  }
   .bonus{
     width: 10px;
     height: auto;
@@ -150,21 +162,23 @@ body::before {
     position: absolute;
   }
 
-  .lasstBullet{
-    height: 16px;
-    width: 4px;
+  .lastBullet{
+    height: 800px;
+    width: 6px;
+    border-radius: 4px;
     background-color: greenyellow;
   }
 
   .rok{
     position: absolute;
-    width: 60px;
-    height: 80px;
+    width: 90px;
+    height: 100px;
     background: url('rock.png') center / cover no-repeat;
+    transform: rotate(40deg);
     z-index: 99;
     border-radius: 20px;
   }
-
+/* 
   #box {
   transform-origin: 50% 50%; 
   transform-box: fill-box;
@@ -175,7 +189,7 @@ body::before {
   to {
     transform: rotate(360deg);
   }
-}
+} */
 
 
 
