@@ -1,3 +1,4 @@
+
 const game = document.createElement('div')
 game.className = 'startdiv'
 document.body.appendChild(game)
@@ -18,7 +19,8 @@ scor()
 bullets()
 level()
 paused()
-
+ let min = 0
+  let sec =0
 let pause = false
   let rdm = 0
 let bulcount = 20
@@ -55,8 +57,8 @@ function startGame() {
   showlvl()
   bonus()
   rock()
+   timer()
   setInterval(createnemy, 3000) ;
-
 }
 
 function createHero() {
@@ -331,6 +333,17 @@ function paused() {
     pausediv.innerText ='PAUSE'
     document.body.appendChild(pausediv)
 }
+function timer() {
+    let timdiv = document.createElement('div')
+    timdiv.setAttribute('class', 'timer')
+    timdiv.innerText =`TIME : 0${min}:${sec}`
+    document.body.appendChild(timdiv)
+    setInterval(() => {
+    if(pause===false) {sec++
+     timdiv.innerText = `TIME : 0${Math.floor(sec/60)}:${sec%60} `}
+    }, 1000);
+}
+
 
 
 //--------------- bons bullet

@@ -134,6 +134,18 @@ body::before {
     align-items: center;
     padding: 10px;
   }
+   .timer{
+    position: fixed;
+    left: 8vw;
+    top: 50vh;
+    height: 4vh;
+    width: 10vw;
+    border-radius: 12px;
+    background-color: rgba(20, 20, 20, 0.783);
+    color: azure;
+    align-items: center;
+    padding: 10px;
+  }
   .pause{
     position: fixed;
     left: 8vw;
