@@ -17,6 +17,7 @@ document.querySelector('.starButton').onclick = startGame
 scor()
 bullets()
 level()
+  let rdm = 0
 let bulcount = 5
 let hero
 let enemies = []
@@ -60,27 +61,59 @@ function createHero() {
   hero.className = 'plan'
   game.appendChild(hero)
 }
+//-------------------- move & shout 
+const keys = {
+  left: false,
+  right: false,
+  shoot: false
+};
+
+let lastShotTime = 0;
+const SHOOT_DELAY = 800; // ms between shots
 
 document.addEventListener('keydown', e => {
-  if (gameOver || !hero) return
+  if (e.key === 'ArrowLeft') keys.left = true;
+  if (e.key === 'ArrowRight') keys.right = true;
+  if (e.key === ' ') keys.shoot = true;
+});
 
-  let x = hero.offsetLeft
-  let gw = game.getBoundingClientRect()
-  let hw = hero.getBoundingClientRect()
-  if (e.key === 'ArrowLeft'  ){
-    if (hw.left>gw.left){
-      hero.style.left = x - 12 + 'px'
+document.addEventListener('keyup', e => {
+  if (e.key === 'ArrowLeft') keys.left = false;
+  if (e.key === 'ArrowRight') keys.right = false;
+  if (e.key === ' ') keys.shoot = false;
+});
+
+function gameLoop() {
+  if (!gameOver && hero) {
+    let x = hero.offsetLeft;
+    let gw = game.getBoundingClientRect();
+    let hw = hero.getBoundingClientRect();
+    const speed = 6;
+
+    if (keys.left && hw.left > gw.left) {
+      hero.style.left = x - speed + 'px';
     }
+
+    if (keys.right && hw.right < gw.right) {
+      hero.style.left = x + speed + 'px';
     }
-  if (e.key === 'ArrowRight'){
-    if (hw.right<gw.right){
-       hero.style.left = x + 12 + 'px' 
+
+   
+    const now = Date.now();
+    if (keys.shoot && now - lastShotTime > SHOOT_DELAY) {
+      heroshut();
+      lastShotTime = now;
     }
-  } 
-  
-  if (e.key === ' ') heroshut(); 
-})
- 
+  }
+
+  requestAnimationFrame(gameLoop);
+}
+
+requestAnimationFrame(gameLoop);
+
+
+
+//---------------------------------------------------------
 function createnemy() {
   let enemyto
   if (enemytotal<=6) enemyto = enemy1
@@ -110,14 +143,14 @@ function createnemy() {
 
 // enemy move
 function movenemy(enemy) {
-  let mod = 0
+  let mod = 1
 let dir = 1
   function step() {
     if (!enemy.parentElement || gameOver) return
 
     let x = enemy.offsetLeft + dir * speed
     enemy.style.left = x + 'px'
-   if(mod%7==0) {
+   if(mod%6==0) {
     enemy.style.top = enemy.offsetTop + 1 + 'px'
   }
   mod++
@@ -201,7 +234,7 @@ function enemyshut(enemy) {
     game.appendChild(b)
     enemyBullets.push(b)
     enemybuletmove(b)
-  }, 3000)
+  }, Math.floor(Math.random()*2000) + 1000   )
 }
 
 function enemybuletmove(b) {
@@ -254,8 +287,6 @@ function heroDies() {
 }
 
 
-
-
 function scor() {
     let scordiv = document.createElement('div')
     scordiv.setAttribute('class', 'score')
@@ -277,10 +308,12 @@ function level() {
 }
 //--------------- bons bullet
 function bonus(){
+ 
  setInterval(() => {
+  rdm = Math.floor(Math.random()*10)
    let bons = document.createElement('div')
   bons.className = 'bonus'
-  bons.innerText = '+5'
+  bons.innerHTML = `<img src="box2.png">`
   bulcounter.innerText =  `Bullets ${bulcount}`
   game.appendChild(bons)
   bonsmove()
@@ -297,7 +330,7 @@ function bonsmove(){
  function mvbns(){ 
   if (hit(bons,hero)){
     bons.remove()
-    bulcount += 5
+    bulcount += rdm
      bulcounter.innerText =  `Bullets ${bulcount}`
   }
 
@@ -320,7 +353,7 @@ function rock(){
   rok.setAttribute('id','box')
   game.appendChild(rok)
   rokmove()
-}, 12000);
+}, 15000);
 }
 
 function rokmove(){
@@ -330,7 +363,7 @@ function rokmove(){
   rok.style.top = 5 + 'px'
   
 
- function mvbns(){ 
+ function mvrok(){ 
   if (hit(rok,hero)){
     rok.remove()
     hero.remove()
@@ -349,9 +382,9 @@ function rokmove(){
   }
   
    rok.style.top = rok.offsetTop + 1 + 'px'
-   requestAnimationFrame(mvbns)
+   requestAnimationFrame(mvrok)
   }
-     requestAnimationFrame(mvbns)
+     requestAnimationFrame(mvrok)
 }
 
 
@@ -443,6 +476,5 @@ function lastbullet(b) {
   }
   requestAnimationFrame(step)
 }
-
 
 

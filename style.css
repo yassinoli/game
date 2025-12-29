@@ -142,6 +142,13 @@ body::before {
     color: whitesmoke;
     position: absolute;
   }
+  .bonus > img{
+    width: 35px;
+    height: auto;
+    background: transparent;
+    color: whitesmoke;
+    position: absolute;
+  }
 
   .lasstBullet{
     height: 16px;
@@ -151,8 +158,8 @@ body::before {
 
   .rok{
     position: absolute;
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 80px;
     background: url('rock.png') center / cover no-repeat;
     z-index: 99;
     border-radius: 20px;
