@@ -148,8 +148,8 @@ body::before {
     cursor: pointer;
   }
   .bonus{
-    width: 10px;
-    height: auto;
+    width: 30px;
+    height: 30px;
     background: transparent;
     color: whitesmoke;
     position: absolute;
@@ -170,26 +170,33 @@ body::before {
   }
 
   .rok{
+     position: absolute;
+    width: 40px;
+    height: 50px;
+    background: transparent;
+    z-index: 99;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+  }
+  .rok > img{
     position: absolute;
+    top: -50%;
+    left: -60%;
     width: 90px;
     height: 100px;
-    background: url('rock.png') center / cover no-repeat;
+    background: transparent;
     transform: rotate(40deg);
     z-index: 99;
     border-radius: 20px;
   }
-/* 
-  #box {
-  transform-origin: 50% 50%; 
-  transform-box: fill-box;
-  animation: rotate-box 3s linear infinite;
-}
 
-@keyframes rotate-box {
-  to {
-    transform: rotate(360deg);
-  }
-} */
+.showlvl{
+  color: beige;
+  font-size: xx-large;
+  background: transparent;
+  margin: 27%  37%;
+}
 
 
 

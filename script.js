@@ -52,6 +52,7 @@ function startGame() {
   startMenu.remove()
   createHero()
   createnemy()
+  showlvl()
   bonus()
   rock()
   setInterval(createnemy, 3000) ;
@@ -126,19 +127,18 @@ requestAnimationFrame(gameLoop);
 
 //---------------------------------------------------------
 function createnemy() {
-  if (pause) return
+  if (pause || lvl>2) return
   let enemyto
   if (enemytotal<=3) enemyto = enemy1
   if (enemytotal>3 && enemytotal<=7) enemyto = enemy2
   if (enemytotal >7) {
-    lvl++
-    levels.innerText = `LEVEL ${lvl}`
+   // levels.innerText = `LEVEL ${lvl}`
     lastStage()
     return
    }
   if (gameOver) return
-   if (enemytotal>3 && lvl <2) lvl++ , levels.innerText = `LEVEL ${lvl}` , speed = 3 // lvl & -> 2
-   if (enemytotal>7 && lvl <3) lvl++ , levels.innerText = `LEVEL ${lvl}` // lvl 2 -> 3
+   if (enemytotal>3 && lvl <2) lvl++ ,showlvl() , levels.innerText = `LEVEL ${lvl}` , speed = 3 // lvl & -> 2
+   if (enemytotal>7 && lvl <3) lvl++,showlvl() , levels.innerText = `LEVEL ${lvl}` // lvl 2 -> 3
   if (enemycount == 3*lvl ) return 
   const e = document.createElement('img')
   e.src = enemyto
@@ -387,6 +387,7 @@ function rock(){
  setInterval(() => {
    let rok = document.createElement('div')
   rok.className = 'rok'
+  rok.innerHTML = '<img src="rock.png">'
   rok.setAttribute('id','box')
   if(pause===false){
     game.appendChild(rok)
@@ -401,7 +402,7 @@ function rokmove(){
   let rok = document.querySelector('.rok')
 
   if (pause===false){
-       rok.style.left = Math.random()*wg.width + 'px'
+       rok.style.left = Math.random()*(wg.width-80)+40 + 'px'
        rok.style.top = 5 + 'px'
   }
 
@@ -415,7 +416,7 @@ function rokmove(){
   }
 
     if(pause===false){
-       rok.style.top = rok.offsetTop + 15 + 'px'
+       rok.style.top = rok.offsetTop + 3 + 'px'
   }
    
    heroBullets.forEach((hb, i) => {
@@ -448,10 +449,12 @@ function rokmove(){
 
 function lastStage(){
  if(enemies.length == 0) {
+  lvl++
+  showlvl()
     const e = document.createElement('img')
   e.src = enemy3
   e.className = 'enmySize'
-  e.style.left = Math.random() * (game.clientWidth - 80) + 'px'
+  e.style.left = Math.random() * (game.clientWidth - 160) + 'px'
   enemycount++
   enemytotal++
   game.appendChild(e)
@@ -467,7 +470,7 @@ let dir = 1
   function step() {
     if (!enemy.parentElement || gameOver ) return
     let g =game.getBoundingClientRect()
-    let gw = g.width
+    let gw = g.width-100
     let x = enemy.offsetLeft + dir * 4
     rdm++
     if(rdm%40===0){
@@ -543,3 +546,12 @@ function lastbullet(b) {
 }
 
 
+function showlvl(){
+  let show = document.createElement('div')
+  show.innerText = `LEVEL ${lvl}`
+  show.setAttribute('class','showlvl')
+  game.appendChild(show)
+  setInterval(() => {
+    show.remove()
+  }, 500);
+}
