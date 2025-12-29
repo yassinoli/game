@@ -462,12 +462,17 @@ function lastStage(){
 }
 
 function movitt(enemy) {
-  
+  let rdm = 0
 let dir = 1
   function step() {
     if (!enemy.parentElement || gameOver ) return
-
+    let g =game.getBoundingClientRect()
+    let gw = g.width
     let x = enemy.offsetLeft + dir * 4
+    rdm++
+    if(rdm%40===0){
+      x = Math.floor(Math.random()*gw)+dir*4
+    }
     if(pause===false){
         enemy.style.left = x + 'px'
     }
