@@ -295,3 +295,13 @@ body::before {
   width: 80px;
   height: 80px;
 }
+
+.pose{
+  background-color: aliceblue;
+  position: fixed;
+  top: 40%;
+  left: 45%;
+  height: 50px;
+  width: 50px;
+  border-radius: 10px;
+}

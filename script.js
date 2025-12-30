@@ -606,3 +606,22 @@ function explostion(x,y){
     exp.remove()
   }, 1000);
 }
+
+function checkP() {
+  const pos = document.querySelector('.pose');
+
+  if (pause === true && pos === null) {
+    pose();
+  } else if (pause !== true && pos !== null) {
+    pos.remove();
+  }
+
+  requestAnimationFrame(checkP);
+}
+requestAnimationFrame(checkP);
+
+function pose() {
+  const poseEl = document.createElement('div');
+  poseEl.className = 'pose';
+  game.appendChild(poseEl);
+}
