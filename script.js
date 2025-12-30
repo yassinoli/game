@@ -84,9 +84,17 @@ btnpause.addEventListener('click' , ()=>{
   }
 })
 document.addEventListener('keydown', e => {
+  
   if (e.key === 'ArrowLeft') keys.left = true;
   if (e.key === 'ArrowRight') keys.right = true;
   if (e.key === ' ') keys.shoot = true;
+  if (e.key === 'p'){
+    if(pause===false){
+      pause =true
+    }else{
+      pause =false
+    }
+  }
 });
 
 document.addEventListener('keyup', e => {
@@ -145,7 +153,7 @@ function createnemy() {
   const e = document.createElement('img')
   e.src = enemyto
   e.className = 'enmySize'
-  e.style.left = Math.random() * (game.clientWidth - 80) + 'px'
+  e.style.left = Math.random() * (game.clientWidth - 160) + 'px'
   enemycount++
   enemytotal++
   game.appendChild(e)
@@ -191,6 +199,7 @@ function heroshut() {
   bulcounter.innerText =  `Bullets ${bulcount}`
   levels.innerText = `LEVEL ${lvl}`
   const b = document.createElement('div')
+  b.innerHTML='<img src="10.webp">'
   b.className = 'bullet'
  
   b.style.left = hero.offsetLeft + hero.offsetWidth / 2 - 20 + 'px'
@@ -211,6 +220,7 @@ function herobuletmove(b) {
     // hero bulet -> enmy
     enemies.forEach((e, i) => {
       if (hit(b, e)) {
+        explostion(e.offsetTop , e.offsetLeft)
         b.remove()
         e.remove()
         scorr+=5
@@ -245,6 +255,7 @@ function enemyshut(enemy) {
     }
 
     const b = document.createElement('div')
+    b.innerHTML = '<img src="albl.png">'
     b.className = 'bullet enemyBullet'
     if(pause===false){
        b.style.left = enemy.offsetLeft + enemy.offsetWidth / 2 - 4 + 'px'
@@ -265,6 +276,7 @@ function enemybuletmove(b) {
 
     // enemybullet -> hero
     if (hit(b, hero)) {
+      explostion(hero.offsetTop ,hero.offsetLeft-40 ) 
       heroDies()
       b.remove()
       return
@@ -303,8 +315,9 @@ function heroDies() {
   gameOver = true
   hero.style.opacity = '0.4'
    sounds.lose.play()
-  alert('GAME OVER')
- window.location.reload()
+//    alert('GAME OVER')
+//  window.location.reload()
+pause =true
 }
 
 
@@ -400,7 +413,7 @@ function rock(){
  setInterval(() => {
    let rok = document.createElement('div')
   rok.className = 'rok'
-  rok.innerHTML = '<img src="rock.png">'
+  rok.innerHTML = '<img src="fire.gif">'
   rok.setAttribute('id','box')
   if(pause===false){
     game.appendChild(rok)
@@ -423,6 +436,7 @@ function rokmove(){
 
  function mvrok(){ 
   if (hit(rok,hero)){
+    explostion(hero.offsetTop , hero.offsetLeft-30)
     rok.remove()
     hero.remove()
     heroDies()
@@ -538,6 +552,7 @@ function lastbullet(b) {
 
     // enemybullet -> hero
     if (hit(b, hero)) {
+      explostion(hero.offsetTop,hero.offsetLeft ) 
       heroDies()
       b.remove()
       return
@@ -567,4 +582,27 @@ function showlvl(){
   setInterval(() => {
     show.remove()
   }, 500);
+}
+
+function winning(){
+  let windiv = document.createElement('div')
+  windiv.className = 'wining'
+  game.appendChild(windiv)
+}
+
+document.addEventListener('visibilitychange', ()=>{
+  if(document.hidden) pause=true
+  else pause =false
+})
+
+function explostion(x,y){
+  let exp =document.createElement('div')
+  exp.className ='explosion'
+  exp.style.top = x +'px'
+  exp.style.left = y + 'px'
+  exp.innerHTML ='<img src="explo.gif">'
+  game.appendChild(exp)
+  setTimeout(() => {
+    exp.remove()
+  }, 1000);
 }

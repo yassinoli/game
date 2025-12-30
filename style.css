@@ -83,15 +83,31 @@ body::before {
   position: absolute;
   width: 3px;
   height: 16px;
-  background: rgb(0, 68, 255);
+  background: transparent;
   border-radius: 2px;
   z-index: 3;
 }
+.bullet > img{
+  position: absolute;
+  left: -10px;
+  height: 8px;
+  width: 30px;
+  transform: rotate(270deg);
+}
 
 .enemyBullet {
-  background: red;
+  background:transparent;
   height: 13px;
   width: 4px;
+}
+.enemyBullet > img{
+  position: absolute;
+  left: -10px;
+   transform: rotate(0deg);
+  height: 40px;
+  width: 10px;
+  background: transparent;
+ 
 }
 
 
@@ -183,31 +199,32 @@ body::before {
 
   .rok{
      position: absolute;
-    width: 40px;
-    height: 50px;
-    background: transparent;
+    width: 30px;
+    height: 40px;
     z-index: 99;
     position: relative;
     justify-content: center;
     align-items: center;
+    background-color: transparent;
   }
   .rok > img{
     position: absolute;
-    top: -50%;
-    left: -60%;
+    top: -78%;
+    left: -68%;
     width: 90px;
     height: 100px;
     background: transparent;
-    transform: rotate(40deg);
+   /* transform: rotate(40deg);*/
     z-index: 99;
     border-radius: 20px;
   }
 
 .showlvl{
+  width: 150px;
   color: beige;
   font-size: xx-large;
   background: transparent;
-  margin: 27%  37%;
+  margin: 27%  45%;
 }
 
 
@@ -253,4 +270,28 @@ body::before {
   to {
     transform: translateY(200px); 
   }
+}
+
+
+.wining{
+ position: fixed;
+ z-index: 100;
+ width: 90px;
+ height: 90px;
+ border-radius: 12px;
+ background-color: darkorange;
+ left: 40vw;
+ top: 40vh;
+}
+
+.explosion{
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: transparent;
+}
+.explosion > img{
+  position: absolute;
+  width: 80px;
+  height: 80px;
 }
