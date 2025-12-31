@@ -165,6 +165,7 @@ function createnemy() {
 
 // enemy move
 function movenemy(enemy) {
+  let ss = 60
   let mod = 1
 let dir = 1
   function step() {
@@ -178,6 +179,9 @@ let dir = 1
   }}
   mod++
     if (x <= 0 || x >= game.clientWidth - enemy.offsetWidth) {
+      dir *= -1
+    }
+    if(ss%(Math.floor(Math.random()*120)) === 2){
       dir *= -1
     }
     if(hit(enemy,hero)){
@@ -315,9 +319,8 @@ function heroDies() {
   gameOver = true
   hero.style.opacity = '0.4'
    sounds.lose.play()
-//    alert('GAME OVER')
-//  window.location.reload()
-pause =true
+   alert('GAME OVER')
+  window.location.reload()
 }
 
 
@@ -623,5 +626,6 @@ requestAnimationFrame(checkP);
 function pose() {
   const poseEl = document.createElement('div');
   poseEl.className = 'pose';
+  poseEl.innerText = 'PAUSE'
   game.appendChild(poseEl);
 }

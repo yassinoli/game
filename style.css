@@ -297,11 +297,17 @@ body::before {
 }
 
 .pose{
-  background-color: aliceblue;
+  z-index: 125;
+  background-color: rgb(109, 124, 137);
   position: fixed;
-  top: 40%;
-  left: 45%;
+  top: 45%;
+  left:46%;
   height: 50px;
-  width: 50px;
-  border-radius: 10px;
+  width: 90px;
+  border-radius: 16px;
+  color: black;
+  font-size:x-large;
+  font-weight: 200;
+  text-align: center;
+  padding-top: 24px;
 }
