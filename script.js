@@ -9,6 +9,7 @@ const sounds = {
   lose: new Audio("die.wav")
 };
 
+
 const startMenu = document.createElement('div')
 startMenu.className = 'starting'
 startMenu.innerHTML = `<button class="starButton">Start</button>`
@@ -136,32 +137,55 @@ requestAnimationFrame(gameLoop);
 
 
 //---------------------------------------------------------
-function createnemy() {
-  if (pause || lvl>2) return
-  let enemyto
-  if (enemytotal<=3) enemyto = enemy1
-  if (enemytotal>3 && enemytotal<=7) enemyto = enemy2
-  if (enemytotal >7) {
-   // levels.innerText = `LEVEL ${lvl}`
-    lastStage()
-    return
-   }
-  if (gameOver) return
-   if (enemytotal>3 && lvl <2) lvl++ ,showlvl() , levels.innerText = `LEVEL ${lvl}` , speed = 3 // lvl & -> 2
-   if (enemytotal>7 && lvl <3) lvl++,showlvl() , levels.innerText = `LEVEL ${lvl}` // lvl 2 -> 3
-  if (enemycount == 3*lvl ) return 
-  const e = document.createElement('img')
-  e.src = enemyto
-  e.className = 'enmySize'
-  e.style.left = Math.random() * (game.clientWidth - 160) + 'px'
-  enemycount++
-  enemytotal++
-  game.appendChild(e)
-  enemies.push(e)
+const levelConfig = {
+  1: { enemy: enemy1, maxAlive: 1, totalToKill: 6 },
+  2: { enemy: enemy2, maxAlive: 6, totalToKill: 12 },
+  3: { boss: true }
+};
 
-  movenemy(e)
-  enemyshut(e)
+let enemiesKilled = 0
+function createnemy() {
+  if (pause || gameOver) return;
+ 
+  // last stage
+  if (lvl === 3) {
+    lastStage();
+    return;
+  }
+
+  const config = levelConfig[lvl];
+
+  //lvl up
+  if (enemiesKilled >= config.totalToKill ) {
+    lvl++;
+    //enemiesKilled = 0;   
+    showlvl();
+    levels.innerText = `LEVEL ${lvl}`;
+    speed += 1.3
+    return;
+  }
+
+  /* ===== LIMIT ENEMIES ALIVE ===== */
+ // if (enemycount-enemiesKilled >= config.maxAlive) return;
+
+  /* ===== CREATE ENEMY ===== */
+  const e = document.createElement('img');
+  e.src = config.enemy;
+  e.className = 'enmySize';
+  e.style.left = Math.random() * (game.clientWidth - 160) + 'px';
+
+  enemycount++;
+
+  game.appendChild(e);
+  enemies.push(e);
+
+
+  movenemy(e);
+  enemyshut(e);
 }
+
+
+
 
 // enemy move
 function movenemy(enemy) {
@@ -178,13 +202,17 @@ let dir = 1
     enemy.style.top = enemy.offsetTop + 1 + 'px'
   }}
   mod++
-    if (x <= 0 || x >= game.clientWidth - enemy.offsetWidth) {
+    //  if(ss%(Math.floor(Math.random()*120)) === 2){
+    //   dir *= -1
+    // }
+    if ((x <= 0 || x >= game.clientWidth - enemy.offsetWidth)||((ss%(Math.floor(Math.random()*120)) === 2)))  {
       dir *= -1
     }
-    if(ss%(Math.floor(Math.random()*120)) === 2){
-      dir *= -1
-    }
+   
     if(hit(enemy,hero)){
+      heroDies()
+    }
+    if(!hit(enemy,game)){
       heroDies()
     }
  
@@ -230,7 +258,7 @@ function herobuletmove(b) {
         scorr+=5
         scores.innerText = `SCORE : ${scorr}`
         sounds.win.play()
-        enemycount--
+        enemiesKilled++
         enemies.splice(i, 1)
       }
     })
