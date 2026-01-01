@@ -214,7 +214,7 @@ body::before {
     width: 90px;
     height: 100px;
     background: transparent;
-   /* transform: rotate(40deg);*/
+   transform: rotate(40deg);
     z-index: 99;
     border-radius: 20px;
   }
@@ -274,14 +274,17 @@ body::before {
 
 
 .wining{
- position: fixed;
- z-index: 100;
- width: 90px;
- height: 90px;
+ z-index: 350;
+ width: 100%;
+ height: 100%;
  border-radius: 12px;
  background-color: darkorange;
- left: 40vw;
- top: 40vh;
+}
+.wining > img{
+  position: absolute;
+  width: 100%;
+  height:100%;
+  z-index: 500;
 }
 
 .explosion{
@@ -291,6 +294,7 @@ body::before {
   background: transparent;
 }
 .explosion > img{
+  z-index: 300;
   position: absolute;
   width: 80px;
   height: 80px;
@@ -301,13 +305,20 @@ body::before {
   background-color: rgb(109, 124, 137);
   position: fixed;
   top: 45%;
-  left:46%;
+  left:48%;
   height: 50px;
-  width: 90px;
+  width: 50px;
   border-radius: 16px;
   color: black;
   font-size:x-large;
   font-weight: 200;
-  text-align: center;
-  padding-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pose > img {
+  position: absolute;
+  width: 40px;
+  height: auto;
 }

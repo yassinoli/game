@@ -1,4 +1,3 @@
-
 const game = document.createElement('div')
 game.className = 'startdiv'
 document.body.appendChild(game)
@@ -8,7 +7,6 @@ const sounds = {
   win: new Audio("kil.wav"),
   lose: new Audio("die.wav")
 };
-
 
 const startMenu = document.createElement('div')
 startMenu.className = 'starting'
@@ -20,11 +18,13 @@ scor()
 bullets()
 level()
 paused()
- let min = 0
-  let sec =0
+let lastOne =false
+let lastOneLives = 3
+let herolives = 2
+let sec =0
 let pause = false
-  let rdm = 0
-let bulcount = 20
+let rdm = 0
+let bulcount = 100
 let hero
 let enemies = []
 let enemytotal = 0
@@ -35,19 +35,19 @@ let enemycount = 0
 let lvl = 1
 let scorr = 0
 let angle = 0
- let speed = 1.3
- const enemy1 = 'enemy1.png'
- const enemy2 = 'enemy2.png'
- const enemy3 = 'enemy3.png'
+let speed = 1.3
+const enemy1 = 'enemy1.png'
+const enemy2 = 'enemy2.png'
+const enemy3 = 'enemy3.png'
 const btnpause = document.querySelector('.pause')
 //--------------
 let bulcounter = document.querySelector('.countBoullet')
- bulcounter.innerText =  `Bullets ${bulcount}`
+bulcounter.innerText =  `Bullets ${bulcount}`
 
- let levels = document.querySelector('.level')
- levels.innerText = `LEVEl ${lvl}`
+let levels = document.querySelector('.level')
+levels.innerText = `LEVEl ${lvl}`
 
- let scores = document.querySelector('.score')
+let scores = document.querySelector('.score')
 scores.innerText = `SCORE : ${scorr}`
 // start game
 function startGame() {
@@ -76,7 +76,7 @@ const keys = {
 };
 
 let lastShotTime = 0;
-const SHOOT_DELAY = 800; // ms between shots
+let SHOOT_DELAY = 400; // ms between shots
 btnpause.addEventListener('click' , ()=>{
   if (pause){
     pause = false
@@ -138,8 +138,8 @@ requestAnimationFrame(gameLoop);
 
 //---------------------------------------------------------
 const levelConfig = {
-  1: { enemy: enemy1, maxAlive: 1, totalToKill: 6 },
-  2: { enemy: enemy2, maxAlive: 6, totalToKill: 12 },
+  1: { enemy: enemy1, maxAlive: 1, totalToKill: 2 },
+  2: { enemy: enemy2, maxAlive: 2, totalToKill: 4 },
   3: { boss: true }
 };
 
@@ -158,6 +158,7 @@ function createnemy() {
   //lvl up
   if (enemiesKilled >= config.totalToKill ) {
     lvl++;
+    SHOOT_DELAY -=200
     //enemiesKilled = 0;   
     showlvl();
     levels.innerText = `LEVEL ${lvl}`;
@@ -205,15 +206,24 @@ let dir = 1
     //  if(ss%(Math.floor(Math.random()*120)) === 2){
     //   dir *= -1
     // }
-    if ((x <= 0 || x >= game.clientWidth - enemy.offsetWidth)||((ss%(Math.floor(Math.random()*120)) === 2)))  {
+    if ((x <= 0 || x >= game.clientWidth - enemy.offsetWidth )||((ss%(Math.floor(Math.random()*120)) === 2)))  {
       dir *= -1
     }
    
     if(hit(enemy,hero)){
-      heroDies()
+      if (herolives==0){
+        heroDies()
+      }else{
+        herolives--
+      }
+      
     }
     if(!hit(enemy,game)){
-      heroDies()
+      if (herolives==0){
+        heroDies()
+      }else{
+        herolives--
+      }
     }
  
        requestAnimationFrame(step)
@@ -252,16 +262,31 @@ function herobuletmove(b) {
     // hero bulet -> enmy
     enemies.forEach((e, i) => {
       if (hit(b, e)) {
-        explostion(e.offsetTop , e.offsetLeft)
+        if(lastOne){
+          b.remove()
+          explostion(e.offsetTop , e.offsetLeft)
+          if(lastOneLives===0){
+            e.remove()
+            winning()
+            gameOver=true
+          }else{
+            lastOneLives--
+          }
+        }else{
         b.remove()
+        enemiesKilled++
+        explostion(e.offsetTop , e.offsetLeft)
         e.remove()
+        enemies.splice(i, 1)
+        }
         scorr+=5
         scores.innerText = `SCORE : ${scorr}`
         sounds.win.play()
-        enemiesKilled++
-        enemies.splice(i, 1)
       }
-    })
+        if(!hit(b,game)){
+        b.remove()
+      }
+    }) 
 
     // hero bul <-> enemy bul
     enemyBullets.forEach((eb, i) => {
@@ -309,7 +334,11 @@ function enemybuletmove(b) {
     // enemybullet -> hero
     if (hit(b, hero)) {
       explostion(hero.offsetTop ,hero.offsetLeft-40 ) 
-      heroDies()
+      if (herolives==0){
+        heroDies()
+      }else{
+        herolives--
+      }
       b.remove()
       return
     }
@@ -380,10 +409,10 @@ function paused() {
 function timer() {
     let timdiv = document.createElement('div')
     timdiv.setAttribute('class', 'timer')
-    timdiv.innerText =`TIME : 0${min}:${sec}`
+    timdiv.innerText =`TIME : 00:${sec}`
     document.body.appendChild(timdiv)
     setInterval(() => {
-    if(pause===false) {sec++
+    if(pause===false && gameOver===false) {sec++
      timdiv.innerText = `TIME : 0${Math.floor(sec/60)}:${sec%60} `}
     }, 1000);
 }
@@ -392,10 +421,10 @@ function timer() {
 
 //--------------- bons bullet
 function bonus(){
- 
+ if(gameOver) return ;
  setInterval(() => {
  
-  if(pause===false){
+  if(pause===false && gameOver===false){
      rdm = Math.floor(Math.random()*10)+5
    let bons = document.createElement('div')
   bons.className = 'bonus'
@@ -412,7 +441,7 @@ function bonsmove(){
   let wg = game.getBoundingClientRect()
   let bons = document.querySelector('.bonus')
   
-   if (pause===false){
+   if (pause===false && gameOver===false){
      bons.style.left = Math.random()*wg.width + 'px'
       bons.style.top = 5 + 'px'
    }
@@ -428,7 +457,7 @@ function bonsmove(){
   if (!hit(bons , game)){
     bons.remove()
   }
-    if(pause===false){
+    if(pause===false && gameOver===false){
          bons.style.top = bons.offsetTop + speed + 'px'
     }
    
@@ -442,13 +471,14 @@ function bonsmove(){
 //--------------- rocks
 function rock(){
  setInterval(() => {
+  if(pause===false && gameOver===false){
    let rok = document.createElement('div')
   rok.className = 'rok'
-  rok.innerHTML = '<img src="fire.gif">'
+  rok.innerHTML = '<img src="rock.png">'
   rok.setAttribute('id','box')
   if(pause===false){
     game.appendChild(rok)
-     rokmove()
+     rokmove()}
   }
  
 }, 8000);
@@ -458,7 +488,7 @@ function rokmove(){
   let wg = game.getBoundingClientRect()
   let rok = document.querySelector('.rok')
 
-  if (pause===false){
+  if (pause===false && gameOver===false){
        rok.style.left = Math.random()*(wg.width-80)+40 + 'px'
        rok.style.top = 5 + 'px'
   }
@@ -473,7 +503,7 @@ function rokmove(){
     heroDies()
   }
 
-    if(pause===false){
+    if(pause===false && gameOver===false){
        rok.style.top = rok.offsetTop + 3 + 'px'
   }
    
@@ -506,9 +536,8 @@ function rokmove(){
 // ----------------- stage tali 
 
 function lastStage(){
+  lastOne = true
  if(enemies.length == 0) {
-  lvl++
-  showlvl()
     const e = document.createElement('img')
   e.src = enemy3
   e.className = 'enmySize'
@@ -584,7 +613,11 @@ function lastbullet(b) {
     // enemybullet -> hero
     if (hit(b, hero)) {
       explostion(hero.offsetTop,hero.offsetLeft ) 
-      heroDies()
+       if (herolives==0){
+        heroDies()
+      }else{
+        herolives--
+      }
       b.remove()
       return
     }
@@ -618,6 +651,7 @@ function showlvl(){
 function winning(){
   let windiv = document.createElement('div')
   windiv.className = 'wining'
+  windiv.innerHTML = '<img src="winer.gif">'
   game.appendChild(windiv)
 }
 
@@ -654,6 +688,6 @@ requestAnimationFrame(checkP);
 function pose() {
   const poseEl = document.createElement('div');
   poseEl.className = 'pose';
-  poseEl.innerText = 'PAUSE'
+  poseEl.innerHTML = '<img src="pause.png">'
   game.appendChild(poseEl);
 }
