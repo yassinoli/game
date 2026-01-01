@@ -19,7 +19,7 @@ bullets()
 level()
 paused()
 let lastOne =false
-let lastOneLives = 3
+let lastOneLives = 19
 let herolives = 2
 let sec =0
 let pause = false
@@ -138,8 +138,8 @@ requestAnimationFrame(gameLoop);
 
 //---------------------------------------------------------
 const levelConfig = {
-  1: { enemy: enemy1, maxAlive: 1, totalToKill: 2 },
-  2: { enemy: enemy2, maxAlive: 2, totalToKill: 4 },
+  1: { enemy: enemy1, maxAlive: 3, totalToKill: 10 },
+  2: { enemy: enemy2, maxAlive: 4, totalToKill: 20 },
   3: { boss: true }
 };
 
@@ -158,7 +158,6 @@ function createnemy() {
   //lvl up
   if (enemiesKilled >= config.totalToKill ) {
     lvl++;
-    SHOOT_DELAY -=200
     //enemiesKilled = 0;   
     showlvl();
     levels.innerText = `LEVEL ${lvl}`;
@@ -498,9 +497,11 @@ function rokmove(){
  function mvrok(){ 
   if (hit(rok,hero)){
     explostion(hero.offsetTop , hero.offsetLeft-30)
-    rok.remove()
-    hero.remove()
+    if(herolives===0){
+      hero.remove()
     heroDies()
+    }
+    rok.remove()
   }
 
     if(pause===false && gameOver===false){
@@ -609,7 +610,9 @@ function lastbullet(b) {
     b.style.left = b.offsetLeft + Math.floor(Math.random()*40)-20 + 'px' 
     }
  
-
+    if(!hit(b,game)){
+      b.remove()
+    }
     // enemybullet -> hero
     if (hit(b, hero)) {
       explostion(hero.offsetTop,hero.offsetLeft ) 

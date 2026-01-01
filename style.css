@@ -211,7 +211,7 @@ body::before {
     position: absolute;
     top: -78%;
     left: -68%;
-    width: 90px;
+    width: 70px;
     height: 100px;
     background: transparent;
    transform: rotate(40deg);
