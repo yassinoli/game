@@ -59,6 +59,7 @@ function startGame() {
   bonus()
   rock()
    timer()
+   countLive()
   setInterval(createnemy, 3000) ;
 }
 
@@ -375,8 +376,14 @@ function heroDies() {
   gameOver = true
   hero.style.opacity = '0.4'
    sounds.lose.play()
-   alert('GAME OVER')
+   let gamov = document.createElement('div')
+   gamov.className = 'gamov'
+   gamov.innerHTML = '<button class="replay">PLAY AGAIN</button>'
+   game.appendChild(gamov)
+   let replay = document.querySelector('.replay')
+   replay.addEventListener('click',()=>{
   window.location.reload()
+})
 }
 
 
@@ -405,6 +412,15 @@ function paused() {
     pausediv.innerText ='PAUSE'
     document.body.appendChild(pausediv)
 }
+function countLive(){
+  let countlive = document.createElement('diiv')
+  countlive.setAttribute('class', 'countlive')
+    countlive.innerText ='❤️​❤️​❤️​'
+    document.body.appendChild(countlive)
+    requestAnimationFrame(checklives)
+}
+
+
 function timer() {
     let timdiv = document.createElement('div')
     timdiv.setAttribute('class', 'timer')
@@ -505,7 +521,7 @@ function rokmove(){
   }
 
     if(pause===false && gameOver===false){
-       rok.style.top = rok.offsetTop + 3 + 'px'
+       rok.style.top = rok.offsetTop + 6 + 'px'
   }
    
    heroBullets.forEach((hb, i) => {
@@ -693,4 +709,18 @@ function pose() {
   poseEl.className = 'pose';
   poseEl.innerHTML = '<img src="pause.png">'
   game.appendChild(poseEl);
+}
+
+
+function checklives(){
+  let lvs =document.querySelector('.countlive')
+  
+  if(herolives==2){
+    lvs.innerText = 'Lives :​❤️​❤️​'
+  }else if (herolives==1){
+    lvs.innerText = 'Lives :​❤️​'
+  }else{
+    lvs.innerText = 'Lives 0​​'
+  }
+  requestAnimationFrame(checklives)
 }

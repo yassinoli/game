@@ -162,7 +162,7 @@ body::before {
     align-items: center;
     padding: 10px;
   }
-  .pause{
+  .countlive{
     position: fixed;
     left: 8vw;
     top: 40vh;
@@ -321,4 +321,26 @@ body::before {
   position: absolute;
   width: 40px;
   height: auto;
+}
+
+.gamov{
+  z-index: 490;
+ width: 100%;
+ height: 100%;
+ border-radius: 12px;
+ background-color: rgb(0, 0, 0);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+}
+
+.gamov > button{
+   height: 6vh;
+  width: 9vw;
+  border-radius: 10px;
+  border: none;
+  background: grey;
+  color: white;
+  cursor: pointer;
+  z-index: 500;
 }
