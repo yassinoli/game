@@ -58,6 +58,16 @@ body::before {
   cursor: pointer;
 }
 
+.buletgain{
+  height: 6vh;
+  width: 9vw;
+  z-index: 500;
+  color: aliceblue;
+  font-size: larger;
+  margin-left: 45%;
+  margin-top: 47%;
+}
+
 /* hero */
 .plan {
   position: absolute;
@@ -71,11 +81,24 @@ body::before {
 
 /* enemy */
 .enmySize {
+  z-index: 300;
   border-radius: 20px;
   position: absolute;
-  width: 6vw;
-  height: auto;
+  width: 8vw;
+  height: 8vh;
   top: 5%;
+}
+.enmySize > img{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 500;
+}
+progress {
+  position: absolute;
+  top: -10px;
+  width: 100%;
+  height: 10%;
 }
 
 /* bullets */

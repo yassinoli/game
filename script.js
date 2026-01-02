@@ -139,8 +139,8 @@ requestAnimationFrame(gameLoop);
 
 //---------------------------------------------------------
 const levelConfig = {
-  1: { enemy: enemy1, maxAlive: 3, totalToKill: 10 },
-  2: { enemy: enemy2, maxAlive: 4, totalToKill: 20 },
+  1: { enemy: enemy1, maxAlive: 4, totalToKill: 10 },
+  2: { enemy: enemy2, maxAlive: 5, totalToKill: 20 },
   3: { boss: true }
 };
 
@@ -203,9 +203,7 @@ let dir = 1
     enemy.style.top = enemy.offsetTop + 1 + 'px'
   }}
   mod++
-    //  if(ss%(Math.floor(Math.random()*120)) === 2){
-    //   dir *= -1
-    // }
+   
     if ((x <= 0 || x >= game.clientWidth - enemy.offsetWidth )||((ss%(Math.floor(Math.random()*120)) === 2)))  {
       dir *= -1
     }
@@ -253,6 +251,8 @@ function heroshut() {
 }
 
 function herobuletmove(b) {
+   const enemyForce = document.querySelector("progress");
+   let damage = 2;
   function step() {
     if (!b.parentElement || gameOver) return
     if(pause===false){
@@ -271,6 +271,7 @@ function herobuletmove(b) {
             gameOver=true
           }else{
             lastOneLives--
+             enemyForce.value = enemyForce.value - damage;
           }
         }else{
         b.remove()
@@ -325,7 +326,9 @@ function enemyshut(enemy) {
 }
 
 function enemybuletmove(b) {
+   
   function step() {
+    
     if (!b.parentElement || gameOver ) return
     if (pause===false){
          b.style.top = b.offsetTop + 4 + 'px'
@@ -466,6 +469,7 @@ function bonsmove(){
   if (hit(bons,hero)){
     bons.remove()
     bulcount += rdm
+    buletwin(rdm)
      bulcounter.innerText =  `Bullets ${bulcount}`
   }
 
@@ -555,9 +559,9 @@ function rokmove(){
 function lastStage(){
   lastOne = true
  if(enemies.length == 0) {
-    const e = document.createElement('img')
-  e.src = enemy3
+  let e = document.createElement('div')
   e.className = 'enmySize'
+  e.innerHTML ='<img src="enemy3.png"><progress  value="40" max="40"></progress>'
   e.style.left = Math.random() * (game.clientWidth - 160) + 'px'
   enemycount++
   enemytotal++
@@ -720,7 +724,18 @@ function checklives(){
   }else if (herolives==1){
     lvs.innerText = 'Lives :​❤️​'
   }else{
-    lvs.innerText = 'Lives 0​​'
+    lvs.innerText = 'Lives : 0'
   }
   requestAnimationFrame(checklives)
+}
+
+
+function buletwin(num){
+  let buletgain = document.createElement('div')
+  buletgain.innerText = `+${num} Bullets`
+  buletgain.className = 'buletgain'
+  game.appendChild(buletgain)
+  setTimeout(() => {
+    buletgain.remove()
+  }, 300);
 }
