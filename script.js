@@ -18,13 +18,21 @@ scor()
 bullets()
 level()
 paused()
+let enemiesKilled = 0
+const keys = {
+  left: false,
+  right: false,
+  shoot: false
+};
+let lastShotTime = 0;
+let SHOOT_DELAY = 200; // ms between shots
 let lastOne =false
 let lastOneLives = 19
 let herolives = 2
 let sec =0
 let pause = false
 let rdm = 0
-let bulcount = 100
+let bulcount = 1000
 let hero
 let enemies = []
 let enemytotal = 0
@@ -70,14 +78,7 @@ function createHero() {
   game.appendChild(hero)
 }
 //-------------------- move & shout 
-const keys = {
-  left: false,
-  right: false,
-  shoot: false
-};
 
-let lastShotTime = 0;
-let SHOOT_DELAY = 400; // ms between shots
 btnpause.addEventListener('click' , ()=>{
   if (pause){
     pause = false
@@ -144,7 +145,7 @@ const levelConfig = {
   3: { boss: true }
 };
 
-let enemiesKilled = 0
+
 function createnemy() {
   if (pause || gameOver) return;
  
@@ -436,7 +437,7 @@ function timer() {
 
 //--------------- bons bullet
 function bonus(){
- if(gameOver) return ;
+ if(gameOver || pause) return ;
  setInterval(() => {
  
   if(pause===false && gameOver===false){
@@ -601,11 +602,11 @@ let dir = 1
 
 function shutitt(enemy) {
   const shoot = setInterval(() => {
-    if (!enemy.parentElement || gameOver) {
+    if (!enemy.parentElement || gameOver ) {
       clearInterval(shoot)
       return
     }
-
+   if(pause===false){
     const b = document.createElement('div')
     b.className = 'bullet enemyBullet'
     b.style.backgroundColor = 'green'
@@ -618,7 +619,7 @@ function shutitt(enemy) {
 
     game.appendChild(b)
     enemyBullets.push(b)
-    lastbullet(b)
+    lastbullet(b)}
   }, 2000)
 }
 
@@ -714,8 +715,10 @@ requestAnimationFrame(checkP);
 function pose() {
   const poseEl = document.createElement('div');
   poseEl.className = 'pose';
-  poseEl.innerHTML = '<img src="pause.png">'
+  poseEl.innerHTML = '<img src="pause.png"><div><button class="replay">replay</button><button class="continue">continue</button></div>'
   game.appendChild(poseEl);
+  document.querySelector('.replay').addEventListener('click',()=>{window.location.reload()})
+  document.querySelector('.continue').addEventListener('click',()=>{pause=false})
 }
 
 
@@ -741,4 +744,30 @@ function buletwin(num){
   setTimeout(() => {
     buletgain.remove()
   }, 300);
+}
+
+
+function replaying(){
+   enemiesKilled = 0
+ lastShotTime = 0;
+ SHOOT_DELAY = 400; // ms between shots
+ lastOne =false
+ lastOneLives = 19
+ herolives = 2
+ sec =0
+ pause = false
+ rdm = 0
+ bulcount = 100
+ hero
+ enemies = []
+ enemytotal = 0
+ heroBullets = []
+ enemyBullets = []
+ gameOver = false
+ enemycount = 0
+ lvl = 1
+ scorr = 0
+ angle = 0
+ speed = 1.3
+ startGame()
 }
