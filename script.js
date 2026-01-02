@@ -166,10 +166,7 @@ function createnemy() {
     return;
   }
 
-  /* ===== LIMIT ENEMIES ALIVE ===== */
- // if (enemycount-enemiesKilled >= config.maxAlive) return;
 
-  /* ===== CREATE ENEMY ===== */
   const e = document.createElement('img');
   e.src = config.enemy;
   e.className = 'enmySize';
@@ -520,8 +517,11 @@ function rokmove(){
     if(herolives===0){
       hero.remove()
     heroDies()
+    }else{
+      rok.remove()
+      herolives--
     }
-    rok.remove()
+    
   }
 
     if(pause===false && gameOver===false){
@@ -676,6 +676,9 @@ function winning(){
   windiv.className = 'wining'
   windiv.innerHTML = '<img src="winer.gif">'
   game.appendChild(windiv)
+  setTimeout(() => {
+    window.location.reload()
+  }, 2000);
 }
 
 document.addEventListener('visibilitychange', ()=>{
