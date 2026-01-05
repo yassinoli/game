@@ -34,6 +34,8 @@ let pause = false
 let rdm = 0
 let bulcount = 1000
 let hero
+let heroX = 0
+let heroY = 0
 let enemies = []
 let enemytotal = 0
 let heroBullets = []
@@ -57,6 +59,24 @@ levels.innerText = `LEVEl ${lvl}`
 
 let scores = document.querySelector('.score')
 scores.innerText = `SCORE : ${scorr}`
+
+// Helper to get element position
+const elementPositions = new WeakMap();
+
+function getPos(el) {
+  if (!elementPositions.has(el)) {
+    elementPositions.set(el, { x: 0, y: 0 });
+  }
+  return elementPositions.get(el);
+}
+
+function setPos(el, x, y) {
+  const pos = getPos(el);
+  pos.x = x;
+  pos.y = y;
+  el.style.transform = `translate(${x}px, ${y}px)`;
+}
+
 // start game
 function startGame() {
   sounds.star.play()
@@ -76,6 +96,9 @@ function createHero() {
   hero.src = 'her.png'
   hero.className = 'plan'
   game.appendChild(hero)
+  heroX = 0
+  heroY = 0
+  setPos(hero, heroX, heroY)
 }
 //-------------------- move & shout 
 
@@ -109,17 +132,18 @@ document.addEventListener('keyup', e => {
 function gameLoop() {
  
   if (!gameOver && hero) {
-    let x = hero.offsetLeft;
     let gw = game.getBoundingClientRect();
     let hw = hero.getBoundingClientRect();
     const speed = 6;
 
     if (keys.left && hw.left > gw.left && pause===false) {
-      hero.style.left = x - speed + 'px';
+      heroX -= speed;
+      setPos(hero, heroX, heroY);
     }
 
     if (keys.right && hw.right < gw.right && pause===false) {
-      hero.style.left = x + speed + 'px';
+      heroX += speed;
+      setPos(hero, heroX, heroY);
     }
 
    
@@ -171,7 +195,8 @@ function createnemy() {
   const e = document.createElement('img');
   e.src = config.enemy;
   e.className = 'enmySize';
-  e.style.left = Math.random() * (game.clientWidth - 160) + 'px';
+  const startX = Math.random() * (game.clientWidth - 160);
+  setPos(e, startX, 0);
 
   enemycount++;
 
@@ -194,12 +219,12 @@ let dir = 1
   function step() {
     
     if (!enemy.parentElement || gameOver) return
- let x = enemy.offsetLeft + dir * speed
-   if(pause===false){
-    enemy.style.left = x + 'px'
-   if(mod%2==0) {
-    enemy.style.top = enemy.offsetTop + 1 + 'px'
-  }}
+    const pos = getPos(enemy);
+    let x = pos.x + dir * speed;
+   if(pause===false) {
+    pos.y += 1;
+    setPos(enemy, x, pos.y);
+  }
   mod++
    
     if ((x <= 0 || x >= game.clientWidth - enemy.offsetWidth )||((ss%(Math.floor(Math.random()*120)) === 2)))  {
@@ -207,12 +232,17 @@ let dir = 1
     }
    
     if(hit(enemy,hero)){
+      const eRect = enemy.getBoundingClientRect();
+      const gRect = game.getBoundingClientRect();
+      explostion(eRect.top - gRect.top, eRect.left - gRect.left);
+      enemy.remove();
+      enemies = enemies.filter(e => e !== enemy);
       if (herolives==0){
         heroDies()
       }else{
         herolives--
       }
-      
+      return;
     }
     if(!hit(enemy,game)){
       if (herolives==0){
@@ -240,8 +270,11 @@ function heroshut() {
   b.innerHTML='<img src="10.webp">'
   b.className = 'bullet'
  
-  b.style.left = hero.offsetLeft + hero.offsetWidth / 2 - 20 + 'px'
-  b.style.top = hero.offsetTop - 10 + 'px'
+  const heroRect = hero.getBoundingClientRect();
+  const gameRect = game.getBoundingClientRect();
+  const startX = heroRect.left - gameRect.left + hero.offsetWidth / 2 - 20;
+  const startY = heroRect.top - gameRect.top - 10;
+  setPos(b, startX, startY);
 
   game.appendChild(b)
   heroBullets.push(b)
@@ -253,8 +286,10 @@ function herobuletmove(b) {
    let damage = 2;
   function step() {
     if (!b.parentElement || gameOver) return
+    const pos = getPos(b);
     if(pause===false){
-          b.style.top = b.offsetTop - 6 + 'px'
+      pos.y -= 6;
+      setPos(b, pos.x, pos.y);
     }
     
     // hero bulet -> enmy
@@ -262,7 +297,9 @@ function herobuletmove(b) {
       if (hit(b, e)) {
         if(lastOne){
           b.remove()
-          explostion(e.offsetTop , e.offsetLeft)
+          const eRect = e.getBoundingClientRect();
+          const gRect = game.getBoundingClientRect();
+          explostion(eRect.top - gRect.top, eRect.left - gRect.left)
           if(lastOneLives===0){
             e.remove()
             winning()
@@ -274,7 +311,9 @@ function herobuletmove(b) {
         }else{
         b.remove()
         enemiesKilled++
-        explostion(e.offsetTop , e.offsetLeft)
+        const eRect = e.getBoundingClientRect();
+        const gRect = game.getBoundingClientRect();
+        explostion(eRect.top - gRect.top, eRect.left - gRect.left)
         e.remove()
         enemies.splice(i, 1)
         }
@@ -314,11 +353,14 @@ function enemyshut(enemy) {
     b.innerHTML = '<img src="albl.png">'
     b.className = 'bullet enemyBullet'
     if(pause===false){
-       b.style.left = enemy.offsetLeft + enemy.offsetWidth / 2 - 4 + 'px'
-    b.style.top = enemy.offsetTop + enemy.offsetHeight + 'px'
-    game.appendChild(b)
-    enemyBullets.push(b)
-    enemybuletmove(b)
+      const eRect = enemy.getBoundingClientRect();
+      const gRect = game.getBoundingClientRect();
+      const startX = eRect.left - gRect.left + enemy.offsetWidth / 2 - 4;
+      const startY = eRect.top - gRect.top + enemy.offsetHeight;
+      setPos(b, startX, startY);
+      game.appendChild(b)
+      enemyBullets.push(b)
+      enemybuletmove(b)
     }
   }, Math.floor(Math.random()*2000) + 1000   )
 }
@@ -328,13 +370,17 @@ function enemybuletmove(b) {
   function step() {
     
     if (!b.parentElement || gameOver ) return
+    const pos = getPos(b);
     if (pause===false){
-         b.style.top = b.offsetTop + 4 + 'px'
+      pos.y += 4;
+      setPos(b, pos.x, pos.y);
     }
 
     // enemybullet -> hero
     if (hit(b, hero)) {
-      explostion(hero.offsetTop ,hero.offsetLeft-40 ) 
+      const hRect = hero.getBoundingClientRect();
+      const gRect = game.getBoundingClientRect();
+      explostion(hRect.top - gRect.top, hRect.left - gRect.left - 40) 
       if (herolives==0){
         heroDies()
       }else{
@@ -458,8 +504,8 @@ function bonsmove(){
   let bons = document.querySelector('.bonus')
   
    if (pause===false && gameOver===false){
-     bons.style.left = Math.random()*wg.width + 'px'
-      bons.style.top = 5 + 'px'
+     const startX = Math.random() * (wg.width-30);
+     setPos(bons, startX, 5);
    }
   
 
@@ -474,9 +520,11 @@ function bonsmove(){
   if (!hit(bons , game)){
     bons.remove()
   }
-    if(pause===false && gameOver===false){
-         bons.style.top = bons.offsetTop + speed + 'px'
-    }
+  const pos = getPos(bons);
+  if(pause===false && gameOver===false){
+    pos.y += speed;
+    setPos(bons, pos.x, pos.y);
+  }
    
        requestAnimationFrame(mvbns)
    
@@ -506,15 +554,17 @@ function rokmove(){
   let rok = document.querySelector('.rok')
 
   if (pause===false && gameOver===false){
-       rok.style.left = Math.random()*(wg.width-80)+40 + 'px'
-       rok.style.top = 5 + 'px'
+    const startX = Math.random() * (wg.width - 80) + 40;
+    setPos(rok, startX, 5);
   }
 
   
 
  function mvrok(){ 
   if (hit(rok,hero)){
-    explostion(hero.offsetTop , hero.offsetLeft-30)
+    const hRect = hero.getBoundingClientRect();
+    const gRect = game.getBoundingClientRect();
+    explostion(hRect.top - gRect.top, hRect.left - gRect.left - 30)
     if(herolives===0){
       hero.remove()
     heroDies()
@@ -525,8 +575,10 @@ function rokmove(){
     
   }
 
-    if(pause===false && gameOver===false){
-       rok.style.top = rok.offsetTop + 6 + 'px'
+  const pos = getPos(rok);
+  if(pause===false && gameOver===false){
+    pos.y += 6;
+    setPos(rok, pos.x, pos.y);
   }
    
    heroBullets.forEach((hb, i) => {
@@ -563,7 +615,8 @@ function lastStage(){
   let e = document.createElement('div')
   e.className = 'enmySize'
   e.innerHTML ='<img src="enemy3.png"><progress  value="40" max="40"></progress>'
-  e.style.left = Math.random() * (game.clientWidth - 160) + 'px'
+  const startX = Math.random() * (game.clientWidth - 160);
+  setPos(e, startX, 0);
   enemycount++
   enemytotal++
   game.appendChild(e)
@@ -580,13 +633,14 @@ let dir = 1
     if (!enemy.parentElement || gameOver ) return
     let g =game.getBoundingClientRect()
     let gw = g.width-100
-    let x = enemy.offsetLeft + dir * 4
+    const pos = getPos(enemy);
+    let x = pos.x + dir * 4;
     rdm++
     if(rdm%40===0){
       x = Math.floor(Math.random()*gw)+dir*4
     }
     if(pause===false){
-        enemy.style.left = x + 'px'
+      setPos(enemy, x, pos.y);
     }
   
 
@@ -614,8 +668,11 @@ function shutitt(enemy) {
     b.style.width = '18x'
     b.style.borderRadius = '5px'
 
-    b.style.left = enemy.offsetLeft + enemy.offsetWidth / 2 - 4 + 'px'
-    b.style.top = enemy.offsetTop + enemy.offsetHeight + 'px'
+    const eRect = enemy.getBoundingClientRect();
+    const gRect = game.getBoundingClientRect();
+    const startX = eRect.left - gRect.left + enemy.offsetWidth / 2 - 4;
+    const startY = eRect.top - gRect.top + enemy.offsetHeight;
+    setPos(b, startX, startY);
 
     game.appendChild(b)
     enemyBullets.push(b)
@@ -626,9 +683,11 @@ function shutitt(enemy) {
 function lastbullet(b) {
   function step() {
     if (!b.parentElement || gameOver ) return
+    const pos = getPos(b);
     if(pause===false){
-    b.style.top = b.offsetTop + 6 + 'px'
-    b.style.left = b.offsetLeft + Math.floor(Math.random()*40)-20 + 'px' 
+      pos.y += 6;
+      pos.x += Math.floor(Math.random()*40)-20;
+      setPos(b, pos.x, pos.y);
     }
  
     if(!hit(b,game)){
@@ -636,7 +695,9 @@ function lastbullet(b) {
     }
     // enemybullet -> hero
     if (hit(b, hero)) {
-      explostion(hero.offsetTop,hero.offsetLeft ) 
+      const hRect = hero.getBoundingClientRect();
+      const gRect = game.getBoundingClientRect();
+      explostion(hRect.top - gRect.top, hRect.left - gRect.left) 
        if (herolives==0){
         heroDies()
       }else{
@@ -690,8 +751,7 @@ document.addEventListener('visibilitychange', ()=>{
 function explostion(x,y){
   let exp =document.createElement('div')
   exp.className ='explosion'
-  exp.style.top = x +'px'
-  exp.style.left = y + 'px'
+  setPos(exp, y, x);
   exp.innerHTML ='<img src="explo.gif">'
   game.appendChild(exp)
   setTimeout(() => {
