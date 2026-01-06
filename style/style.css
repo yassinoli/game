@@ -17,7 +17,7 @@ body::before {
   left: 50%;
   width: 100vh;
   height: 100vw;
-  background: url("str.jpg") center / cover no-repeat;
+  background: url("../image/str.jpg") center / cover no-repeat;
   transform: translate(-50%, -50%) rotate(270deg);
   z-index: -1;
 }
