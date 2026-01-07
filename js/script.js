@@ -13,10 +13,30 @@ const sounds = {
 
 const startMenu = document.createElement('div')
 startMenu.className = 'starting'
-startMenu.innerHTML = `<button class="starButton">Start</button>`
+startMenu.innerHTML = `<button class="starButton">Start</button><button class="instruct">instructions</button>`
 game.appendChild(startMenu)
 
 document.querySelector('.starButton').onclick = startGame
+document.querySelector('.instruct').onclick = instructio
+function instructio(){
+   let deja = document.querySelector('.instructions')
+  if(!deja){
+    let instdiv = document.createElement('div')
+  instdiv.innerText  = ` in the year 2315, aliens attacked Earth. Your mission is to defend the planet.
+        Earth’s scientists have given you a fast and advanced combat plan.
+
+        You have 3 chances to defeat the aliens. Do not let any of them pass behind you.
+        If they do, they will attack Earth and you will lose.
+
+        Use the ← and → arrow keys to move, press Space to shoot,
+        and press P to pause the game.
+
+        Let’s go — everyone is counting on you to win!`
+        instdiv.className = 'instructions'
+        game.appendChild(instdiv)
+  }
+  
+}
 scor()
 bullets()
 level()
@@ -54,6 +74,10 @@ export function setPos(el, x, y) {
 
 // start game
 function startGame() {
+  let ins = document.querySelector('.instructions')
+  if (ins){
+    ins.remove()
+  }
   sounds.star.play()
   startMenu.remove()
   createHero()

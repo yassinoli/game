@@ -45,10 +45,19 @@ body::before {
   gap: 40px;
   z-index: 5;
 }
-
+.instructions{
+  position: absolute;
+  width: 80%;
+  height: 30%;
+  margin: 10% 10%;
+  background-color: rgb(126, 126, 123);
+  border-radius: 15px;
+  padding: 20px;
+  z-index: 800;
+}
 /* buttons */
 .starButton,
-.instructionbtn {
+.instruct {
   height: 6vh;
   width: 9vw;
   border-radius: 10px;
