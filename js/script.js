@@ -2,12 +2,13 @@ import {createnemy } from './enemys.js'
 import {stat} from './state.js'
 export const game = document.createElement('div')
 game.className = 'startdiv'
+game.setAttribute('id','gama')
 document.body.appendChild(game)
 
 const sounds = {
-  star: new Audio("audio/start.wav"),
-  win: new Audio("audio/kil.wav"),
-  lose: new Audio("audio/die.wav")
+  star: new Audio("../audio/start.wav"),
+  win: new Audio("../audio/kil.wav"),
+  lose: new Audio("../audio/die.wav")
 };
 
 const startMenu = document.createElement('div')
@@ -301,18 +302,19 @@ function timer() {
 function bonus(){
  if(stat.gameOver || stat.pause) return ;
  setInterval(() => {
- 
+  let checkeing = document.querySelector('.bonus')
   if(stat.pause===false && stat.gameOver===false){
-     stat.rdm = Math.floor(Math.random()*10)+5
+    if(!checkeing){
+       stat.rdm = Math.floor(Math.random()*10)+5
    let bons = document.createElement('div')
   bons.className = 'bonus'
   bons.innerHTML = `<img src="image/box2.png">`
   bulcounter.innerText =  `Bullets ${stat.bulcount}`
       game.appendChild(bons)
        bonsmove()
+    }
   }
- 
-}, 10000);
+}, 1000);
 }
 
 function bonsmove(){
@@ -352,16 +354,18 @@ function bonsmove(){
 function rock(){
  setInterval(() => {
   if(stat.pause===false && stat.gameOver===false){
-   let rok = document.createElement('div')
+    let chck = document.querySelector('.rok')
+    if(!chck){
+      let rok = document.createElement('div')
   rok.className = 'rok'
   rok.innerHTML = '<img src="image/rock.png">'
   rok.setAttribute('id','box')
   if(stat.pause===false){
     game.appendChild(rok)
      rokmove()}
+    }
   }
- 
-}, 8000);
+}, 3000);
 }
 
 function rokmove(){
@@ -467,21 +471,25 @@ function pose() {
   poseEl.className = 'pose';
   poseEl.innerHTML = '<img src="image/pause.png"><div><button class="replay">replay</button><button class="continue">continue</button></div>'
   game.appendChild(poseEl);
-  document.querySelector('.replay').addEventListener('click',()=>{window.location.reload()})
+  document.querySelector('.replay').addEventListener('click',()=>{
+     window.location.reload()
+    //replaying()
+  })
   document.querySelector('.continue').addEventListener('click',()=>{stat.pause=false})
 }
 
 
 function checklives(){
   let lvs =document.querySelector('.countlive')
-  
-  if(stat.herolives==2){
-    lvs.innerText = 'Lives :​❤️​❤️​'
-  }else if (stat.herolives==1){
-    lvs.innerText = 'Lives :​❤️​'
-  }else{
-    lvs.innerText = 'Lives : 0'
-  }
+  let heart = '​❤️'
+  lvs.innerText = `Lives : ${heart.repeat(stat.herolives)}`
+  // if(stat.herolives==2){
+  //   lvs.innerText = 'Lives :​❤️​'
+  // }else if (stat.herolives==1){
+  //   lvs.innerText = 'Lives :​❤️​'
+  // }else{
+  //   lvs.innerText = 'Lives : 0'
+  // }
   requestAnimationFrame(checklives)
 }
 
@@ -498,6 +506,7 @@ function buletwin(num){
 
 
 function replaying(){
+
    stat.enemiesKilled = 0
  stat.lastShotTime = 0;
  stat.SHOOT_DELAY = 400; // ms between shots
@@ -508,16 +517,21 @@ function replaying(){
  stat.pause = false
  stat.rdm = 0
  stat.bulcount = 100
- hero
  stat.enemies = []
- enemytotal = 0
+ stat.enemytotal = 0
  stat.heroBullets = []
  stat.enemyBullets = []
  stat.gameOver = false
- enemycount = 0
+ stat.enemycount = 0
  stat.lvl = 1
  stat.scorr = 0
- angle = 0
+ stat.angle = 0
  stat.speed = 1.3
+ stat.levelConfig = {
+  1: { enemy: 'image/enemy1.png', maxAlive: 4, totalToKill: 4 },
+  2: { enemy: 'image/enemy2.png', maxAlive: 5, totalToKill: 6 },
+  3: { boss: true }}
+ const df = document.getElementById('gama')
+ df.innerHTML = ''
  startGame()
 }

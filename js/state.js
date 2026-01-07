@@ -9,7 +9,7 @@ export let stat = {
   sec :0,
   pause : false,
   rdm : 0,
-  bulcount : 1000,
+  bulcount : 100,
   heroX : 0,
   heroY : 0,
   enemytotal : 0,
@@ -25,8 +25,8 @@ export let stat = {
   enemy2 : 'image/enemy2.png',
   enemy3 : 'image/enemy3.png',
 levelConfig : {
-  1: { enemy: 'image/enemy1.png', maxAlive: 4, totalToKill: 4 },
-  2: { enemy: 'image/enemy2.png', maxAlive: 5, totalToKill: 6 },
+  1: { enemy: 'image/enemy1.png', maxAlive: 5, totalToKill: 10 },
+  2: { enemy: 'image/enemy2.png', maxAlive: 8, totalToKill: 25 },
   3: { boss: true }},
   
 }

@@ -104,11 +104,13 @@ progress {
 /* bullets */
 .bullet {
   position: absolute;
-  width: 3px;
-  height: 16px;
+  width: 35px;
+  height: auto;
   background: transparent;
   border-radius: 2px;
   z-index: 3;
+   transform: translate3d(0,0,0);
+  will-change: transform;
 }
 .bullet > img{
   position: absolute;
@@ -128,7 +130,7 @@ progress {
   left: -10px;
    transform: rotate(0deg);
   height: 40px;
-  width: 10px;
+  width: 40px;
   background: transparent;
  
 }
